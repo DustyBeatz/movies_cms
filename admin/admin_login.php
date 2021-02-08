@@ -1,5 +1,10 @@
 <?php
 require_once '../load.php';
+confirm_logged_in();
+
+if(isset($_SESSION['user_id'])){
+    redirect_to("index.php");
+}
 
 if(isset($_POST['submit'])) {
     $username = trim($_POST['username']);

@@ -1,5 +1,5 @@
 <?php
-function login($username, $password) {
+function login($username, $password, $ip) {
 
 
     $pdo = Database::getInstance() -> getConnection();
@@ -16,9 +16,37 @@ function login($username, $password) {
 
         if($found_user = $user_set->fetch(PDO::FETCH_ASSOC)) {
             ##TODO: DEBUG LATER
-            return 'we will log you in'; 
+            $found_user_id = $found_user['user_id'];
 
+            //write the username and userid into session
+            $_SESSION['user_id'] = $found_user_id;
+            $_SESSION['user_name'] = $found_user_name['user_fname'];
+
+//update the user IP by the current logged in one
+$update_user = 'UPDATE tbl_user SET user_ip= :user_ip WHERE user_id=:user_id';
+$update_user_set = $pdo->prepare($update_user_query);
+$update_user_set ->execute(
+    array(
+        ':user_ip'=>$ip,
+        ':user_id'=>$found_user_id
+    )
+    );
+
+    //redirect user back to the index.php
+    redirect_to('index.php');
         }else{
-            return 'you misspelled your pass or user, idiot.';
+            return 'you misspelled your pass or user, BAKA.';
         }
+}
+
+function confirm_logged_in() {
+    if(isset($_SESSION['user_id'])){
+        redirect_to("admin_login.php");
+    }
+}
+
+function logout() {
+    session_destroy();
+
+    redirect_to('admin_login.php');
 }
