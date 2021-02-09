@@ -1,23 +1,22 @@
 <?php
 require_once '../load.php';
-confirm_logged_in();
+$ip = $_SERVER['REMOTE_ADDR'];
 
-if(isset($_SESSION['user_id'])){
+if (isset($_SESSION['user_id'])) {
     redirect_to("index.php");
 }
 
-if(isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
-        if(!empty($username) && !empty($password)) {
-            $result = login($username, $password);
-            $message = $result;
-        } else {
-            $message = "Please fill out the required fields.";
-        }
+    if (!empty($username) && !empty($password)) {
+        $result = login($username, $password, $ip);
+        $message = $result;
+    } else {
+        $message = 'Please fill out the required fields.';
+    }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +26,7 @@ if(isset($_POST['submit'])) {
     <title>Welcome to the admin panel</title>
 </head>
 <body>
-    <?echo !empty($message)?$message:'';?>
+    <?php echo !empty($message)?$message:'';?>
         <form action="admin_login.php" method="post">
             <label for="username">USERNAME:<label>
             <input id="username" type="text" name="username" value="">

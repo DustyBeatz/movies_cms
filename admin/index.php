@@ -1,5 +1,6 @@
 <?php 
 require_once '../load.php';
+confrim_logged_in();
 ?>
 
 <!DOCTYPE html>
